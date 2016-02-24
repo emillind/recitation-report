@@ -7,7 +7,20 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
+
+	<?php include 'header.php'; ?>
+
 	<div class="container">
+
+	<?php
+
+	if ($_GET['loggedin']) {
+		echo "logged in";
+	} else {
+		include 'login.php';
+	}
+
+	?>
 
 	</div>
 </body>
