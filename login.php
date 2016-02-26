@@ -10,9 +10,7 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" placeholder="Password">
       </fieldset>
-      <a href="http://localhost:8888/index.php?loggedin=true"
-        <button type="submit" class="btn btn-primary" value="Log in">Log in</button>
-      </a>
+      <input type="submit" class="btn btn-primary" value="Log in">
     </form>
   </div>
 </div>
