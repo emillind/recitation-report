@@ -9,7 +9,7 @@
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Recitation Reporter</a>
+        <a class="navbar-brand" href="index.php">Recitation Reporter</a>
       </div>
 			<!-- If user is logged in we show a log out button -->
 			<?php if(isset($_SESSION['username'])){ ?>

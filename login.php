@@ -11,9 +11,18 @@ if (isset($_POST['submit'])) {
     $username=$_POST['username'];
     $password=$_POST['password'];
 
+    $username = stripslashes($username);
+    $password = stripslashes($password);
+
+    $dbconn = pg_connect('dbname=recitationreport');
+    $query = "SELECT name, password FROM Student WHERE id = '$username'";
+    $result = pg_query($dbconn, $query);
+
+    $row = pg_fetch_row($result);
     //Check username matches password here
-    if (true) {
+    if ($row[1] == $password) {
       $_SESSION['username'] = $username;
+      $_SESSION['name'] = $row[0];
     } else {
       $error = "Username or Password is invalid";
     }
