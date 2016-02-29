@@ -36,7 +36,7 @@ include_once 'header.php';
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" placeholder="Enter password..." name="password">
       </fieldset>
-      <input type="submit" class="btn btn-primary" value="Log in" name="submit">
+      <input type="submit" class="btn btn-primary" value="Log in" name="submitlogin">
     </form>
   </div>
 </div>

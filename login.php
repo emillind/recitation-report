@@ -2,7 +2,7 @@
 session_start();
 $error = "";
 //If submit button from login form is pressed...
-if (isset($_POST['submit'])) {
+if (isset($_POST['submitlogin'])) {
 
   //Check that both username and password is filled in
   if (empty($_POST['username']) || empty($_POST['password'])) {
@@ -15,17 +15,22 @@ if (isset($_POST['submit'])) {
     $password = stripslashes($password);
 
     $dbconn = pg_connect('dbname=recitationreport');
-    $query = "SELECT name, password FROM Student WHERE id = '$username'";
-    $result = pg_query($dbconn, $query);
-
-    $row = pg_fetch_row($result);
-    //Check username matches password here
-    if ($row[1] == $password) {
-      $_SESSION['username'] = $username;
-      $_SESSION['name'] = $row[0];
+    if (!$dbconn) {
+      $error = "Could not connect to database! Make sure it's running.";
     } else {
-      $error = "Username or Password is invalid";
+      $query = "SELECT name, password FROM Student WHERE id = '$username'";
+      $result = pg_query($dbconn, $query);
+
+      $row = pg_fetch_row($result);
+      //Check username matches password here
+      if ($row[1] == $password) {
+        $_SESSION['username'] = $username;
+        $_SESSION['name'] = $row[0];
+      } else {
+        $error = "Username or Password is invalid!";
+      }
     }
+    pg_close($dbconn);
   }
 }
 ?>

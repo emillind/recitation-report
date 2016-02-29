@@ -97,6 +97,8 @@ BEGIN;
 
 INSERT INTO Course VALUES ('DD1368', 'Databasteknik för D');
 INSERT INTO Course VALUES ('DD1393', 'Mjukvarukonstruktion');
+INSERT INTO Course VALUES ('DD1390', 'Programsammahållande kurs i Datateknik');
+INSERT INTO Course VALUES ('SF1901', 'Sannoliksteori och statistik');
 
 COMMIT;
 
