@@ -9,7 +9,7 @@ require_once 'login.php';
 
 //If a user is logged in, redirect to another page
 if(isset($_SESSION['username'])){
-	header('Location: welcome.php');
+	header('Location: home.php');
 }
 
 //Include header template
@@ -36,7 +36,7 @@ include_once 'header.php';
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" placeholder="Enter password..." name="password">
       </fieldset>
-      <input type="submit" class="btn btn-primary" value="Log in" name="submit">
+      <input type="submit" class="btn btn-primary" value="Log in" name="submitlogin">
     </form>
   </div>
 </div>
