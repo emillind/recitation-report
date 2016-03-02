@@ -9,7 +9,7 @@ require_once 'login.php';
 
 //If a user is logged in, redirect to another page
 if(isset($_SESSION['username'])){
-	header('Location: welcome.php');
+	header('Location: home.php');
 }
 
 //Include header template

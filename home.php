@@ -1,75 +1,22 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['username'])){
+	header('Location: index.php');
+}
+
 include_once 'header.php';
 include_once 'submitclaim.php';
 
-//Connect to db
-$dbconn = pg_connect('dbname=recitationreport');
-if (!$dbconn) {
-  echo "Error: Could not connect to database. \n";
-  exit;
-}
+include_once 'getrecitations.php';
 
-//If available courses hasn't been set, query db and set it.
-if (!isset($_SESSION['courses'])) {
-  $query = "SELECT DISTINCT(c.cID), c.name FROM Course c, Recitation r, Takes t WHERE t.cID = c.cID AND t.studentID = '".$_SESSION['username']."'";
-  $result = pg_fetch_all(pg_query($dbconn, $query));
-  if (!$result) {
-    echo "An error occurred. \n";
-    exit;
-  } else {
-    $_SESSION['courses'] = $result;
-  }
-}
-
-//If a course has been selected, fetch available recitations for the course.
-if (isset($_GET['course'])) {
-  $query = "SELECT num FROM Recitation WHERE cid = '".$_GET['course']."'";
-  $result = pg_fetch_all(pg_query($dbconn, $query));
-  if (!$result) {
-    echo "An error occurred. No recitations for selected course was found.\n";
-    exit;
-  } else {
-    $_SESSION['recitations'] = $result;
-  }
-
-  //If a course and a recitation has been selected, fetch available groups for the recitation.
-  if (isset($_GET['recitation'])) {
-    $query = "SELECT name, maxlimit FROM RecitationGroup WHERE num = ".$_GET['recitation']." AND cid = '".$_GET['course']."'";
-    $result = pg_fetch_all(pg_query($dbconn, $query));
-    if (!$result) {
-      echo "An error occurred. No groups for selected course+recitation was found.\n";
-      exit;
-    } else {
-      $_SESSION['groups'] = $result;
-    }
-
-    //If a course, a recitation and a group has been selected, fetch the problems.
-    if (isset($_GET['group'])) {
-      $query = "SELECT h.recnum, h.problemset, h.condition, rg.dategiven, rg.name, h.cid FROM hasproblems h, recitationgroup rg WHERE h.cid = rg.cid AND h.recnum = rg.num AND h.cid = '". $_GET['course'] ."' AND h.recnum = ". $_GET['recitation'] ." AND rg.name = '". $_GET['group'] ."'";
-      $result = pg_fetch_array(pg_query($dbconn, $query));
-      if (!$result) {
-        echo "An error occurred. No problems for selected course+recitation+group was found.\n";
-        exit;
-      } else {
-        $_SESSION['problems'] = $result;
-      }
-
-    } else {
-      unset($_SESSION['problems']); //For hiding recitation data.
-    }
-  } else {
-    unset($_SESSION['problems']); //For hiding recitation data.
-  }
-} else {
-  unset($_SESSION['problems']); //For hiding recitation data.
-}
-
-pg_close($dbconn);
 ?>
 <?php if (!isset($_SESSION['loginbanner'])) { ?>
 <div class="alert alert-info" role="alert"><?php echo "Successfully logged in  <strong>".$_SESSION['name']."</strong>!"; ?></div>
 <?php $_SESSION['loginbanner'] = false; } ?>
+<?php if (isset($_SESSION['claimed'])) { ?>
+<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Sucessfully claimed problems.</div>
+<?php unset($_SESSION['claimed']); } ?>
 <div class=""><h1>Welcome <?php echo $_SESSION['name'] ?>!</h1><p>
   Use the buttons below to select a recitation to submit claims to.
 </p></div>
@@ -149,13 +96,23 @@ pg_close($dbconn);
   </div>
 </div>
 
+<?php if (isset($_SESSION['alreadyClaimed']) && $_SESSION['alreadyClaimed'] != null) { ?>
+<div class="alert alert-warning" role="alert">
+  <?php
+    echo "Already claimed this recitation! (Group ". $_SESSION['alreadyClaimed'][0]['groupname'] .")";
+    echo "<br/>";
+    echo "You claimed: ".$_SESSION['alreadyClaimed'][0]['claimedset'];
+  ?>
+</div>
+<?php unset($_SESSION['alreadyClaimed']); } ?>
+
 <?php if (isset($_SESSION['problems']) && $_SESSION['problems'] != null) { ?>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Recitation <?php echo $_SESSION['problems']['recnum'] ?> <span class="pull-right">Group <?php echo $_SESSION['problems']['name']; ?></span></h3>
   </div>
   <div class="panel-body">
-    <form class="" action="welcome.php" method="post">
+    <form class="" action="home.php" method="post">
       <div class="row">
         <?php
         $problems = preg_split("/[\d]/", $_SESSION['problems']['problemset']);
@@ -171,7 +128,7 @@ pg_close($dbconn);
         }
         ?>
       </div>
-      <input type=submit value="Lock in claims" name="submitclaims" class="btn btn-danger"/>
+      <button type=submit value="Lock in claims" name="submitclaims" class="btn btn-danger"/><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Lock in claims</button>
     </form>
   </div>
 </div>

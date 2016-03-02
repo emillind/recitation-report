@@ -26,7 +26,8 @@ if (isset($_POST['submitclaims'])) {
     echo "An error occurred. Nothing claimed.\n";
     exit;
   } else {
-    header('Location: welcome.php');
+    $_SESSION['claimed'] = true;
+    header('Location: home.php');
   }
   pg_close($dbconn);
 }
