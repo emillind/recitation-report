@@ -1,7 +1,7 @@
     </div> <!-- Container -->
     <nav class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <a class="navbar">&copy; Jonathan Berglind &amp; Emil Lindblom, 2016</a>
+        <p class="navbar-text">&copy; Jonathan Berglind &amp; Emil Lindblom, 2016</p>
       </div>
     </nav>
   </body>
